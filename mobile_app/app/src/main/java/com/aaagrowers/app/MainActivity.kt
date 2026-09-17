@@ -7,7 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.aaagrowers.app.data.api.ApiClient
 import com.aaagrowers.app.data.local.SessionManager
 import com.aaagrowers.app.data.repository.*
-import com.aaagrowers.app.ui.navigation.NavGraph
+import com.aaagrowers.app.ui.navigation.AppNavGraph
 import com.aaagrowers.app.ui.navigation.Screen
 import com.aaagrowers.app.ui.theme.AAAGrowersTheme
 import com.aaagrowers.app.ui.viewmodel.*
@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AAAGrowersTheme {
                 val navController = rememberNavController()
-                NavGraph(
+                AppNavGraph(
                     navController = navController,
                     authViewModel = authViewModel,
                     customerViewModel = customerViewModel,

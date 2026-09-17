@@ -1,3 +1,4 @@
+@file:JvmName("AppNavGraph")
 package com.aaagrowers.app.ui.navigation
 
 import androidx.compose.foundation.layout.padding
@@ -12,9 +13,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.aaagrowers.app.ui.screens.auth.*
+
+// Auth Screens
+import com.aaagrowers.app.ui.screens.auth.LoginScreen
+import com.aaagrowers.app.ui.screens.auth.CustomerRegisterScreen
+import com.aaagrowers.app.ui.screens.auth.FarmerRegisterScreen
+import com.aaagrowers.app.ui.screens.auth.UnifiedRegisterScreen
+
+// Customer Screens
 import com.aaagrowers.app.ui.screens.customer.AboutScreen
 import com.aaagrowers.app.ui.screens.customer.CartScreen
 import com.aaagrowers.app.ui.screens.customer.CheckoutScreen
@@ -29,13 +40,33 @@ import com.aaagrowers.app.ui.screens.customer.OrderTrackingScreen
 import com.aaagrowers.app.ui.screens.customer.ProductDetailScreen
 import com.aaagrowers.app.ui.screens.customer.ProductListScreen
 import com.aaagrowers.app.ui.screens.customer.SearchScreen
-import com.aaagrowers.app.ui.screens.farmer.*
-import com.aaagrowers.app.ui.screens.staff.*
+
+// Farmer Screens
+import com.aaagrowers.app.ui.screens.farmer.CertificateViewerScreen
+import com.aaagrowers.app.ui.screens.farmer.FarmerBookingsScreen
+import com.aaagrowers.app.ui.screens.farmer.FarmerHomeScreen
+import com.aaagrowers.app.ui.screens.farmer.FarmerProfileScreen
+import com.aaagrowers.app.ui.screens.farmer.TrainingDetailScreen
+import com.aaagrowers.app.ui.screens.farmer.TrainingListScreen
+
+// Staff Screens
+import com.aaagrowers.app.ui.screens.staff.StaffInventoryScreen
+import com.aaagrowers.app.ui.screens.staff.StaffLogisticsScreen
+import com.aaagrowers.app.ui.screens.staff.StaffMainContainer
+import com.aaagrowers.app.ui.screens.staff.StaffOrdersScreen
+import com.aaagrowers.app.ui.screens.staff.StaffSuppliersScreen
+
+// Theme & ViewModels
 import com.aaagrowers.app.ui.theme.EmeraldPrimary
-import com.aaagrowers.app.ui.viewmodel.*
+import com.aaagrowers.app.ui.viewmodel.AuthViewModel
+import com.aaagrowers.app.ui.viewmodel.CartViewModel
+import com.aaagrowers.app.ui.viewmodel.CustomerViewModel
+import com.aaagrowers.app.ui.viewmodel.FarmerViewModel
+import com.aaagrowers.app.ui.viewmodel.OrderViewModel
+import com.aaagrowers.app.ui.viewmodel.StaffViewModel
 
 @Composable
-fun NavGraph(
+fun AppNavGraph(
     navController: NavHostController,
     authViewModel: AuthViewModel,
     customerViewModel: CustomerViewModel,
