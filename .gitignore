@@ -1,0 +1,81 @@
+# =========================
+# Operating System & IDEs
+# =========================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# =========================
+# Python / Flask Backend
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.pytest_cache/
+.coverage
+htmlcov/
+*.sqlite
+*.sqlite3
+*.db
+backend/instance/
+backend/.env
+
+# =========================
+# React / Node Dashboard
+# =========================
+node_modules/
+admin_dashboard/node_modules/
+admin_dashboard/dist/
+admin_dashboard/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =========================
+# Android Studio / Gradle
+# =========================
+.gradle/
+mobile_app/.gradle/
+mobile_app/app/build/
+mobile_app/build/
+mobile_app/local.properties
+mobile_app/.idea/
+mobile_app/captures/
+mobile_app/.externalNativeBuild/
+mobile_app/.cxx/
+*.apk
+*.aab
+*.keystore
+*.jks
