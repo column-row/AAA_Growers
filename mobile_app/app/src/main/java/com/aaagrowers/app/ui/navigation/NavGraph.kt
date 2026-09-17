@@ -350,7 +350,8 @@ fun CustomerMainContainer(
             composable(Screen.OrderHistory.route) {
                 OrderHistoryScreen(
                     orderViewModel = orderViewModel,
-                    onNavigateToOrderTracking = { rootNavController.navigate(Screen.OrderTracking.createRoute(it)) }
+                    onNavigateToOrderTracking = { rootNavController.navigate(Screen.OrderTracking.createRoute(it)) },
+                    onNavigateToCatalog = { bottomNavController.navigate(Screen.ProductList.route) }
                 )
             }
 

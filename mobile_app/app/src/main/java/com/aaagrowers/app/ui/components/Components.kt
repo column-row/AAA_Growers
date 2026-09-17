@@ -16,12 +16,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.aaagrowers.app.data.model.Product
 import com.aaagrowers.app.ui.theme.*
 
@@ -60,7 +62,11 @@ fun AAAButton(
                     Icon(icon, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
                 }
-                Text(text, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Text(
+                    text = text,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
@@ -71,12 +77,12 @@ fun AAATextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    modifier: Modifier = Modifier,
     placeholder: String = "",
     leadingIcon: ImageVector? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     isPassword: Boolean = false,
-    keyboardOptions: androidx.compose.foundation.text.KeyboardOptions = androidx.compose.foundation.text.KeyboardOptions.Default
+    keyboardOptions: androidx.compose.foundation.text.KeyboardOptions = androidx.compose.foundation.text.KeyboardOptions.Default,
+    modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         value = value,
@@ -102,6 +108,72 @@ fun AAATextField(
 }
 
 @Composable
+fun AAAAsyncImage(
+    imageUrl: String?,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Crop,
+    fallbackTitle: String? = null
+) {
+    val context = LocalContext.current
+    val imageRequest = ImageRequest.Builder(context)
+        .data(imageUrl?.takeIf { it.isNotBlank() } ?: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600")
+        .crossfade(true)
+        .build()
+
+    SubcomposeAsyncImage(
+        model = imageRequest,
+        contentDescription = contentDescription,
+        modifier = modifier,
+        contentScale = contentScale,
+        loading = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(EmeraldLight.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = EmeraldPrimary,
+                    strokeWidth = 2.dp
+                )
+            }
+        },
+        error = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(EmeraldContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(6.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Spa,
+                        contentDescription = null,
+                        tint = EmeraldDark,
+                        modifier = Modifier.size(28.dp)
+                    )
+                    if (!fallbackTitle.isNullOrBlank()) {
+                        Text(
+                            text = fallbackTitle,
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = EmeraldDark,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
 fun ProductCard(
     product: Product,
     onClick: () -> Unit,
@@ -123,9 +195,10 @@ fun ProductCard(
                     .height(130.dp)
                     .background(BorderLight)
             ) {
-                AsyncImage(
-                    model = product.imageUrl ?: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600",
+                AAAAsyncImage(
+                    imageUrl = product.imageUrl,
                     contentDescription = product.name,
+                    fallbackTitle = product.name,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
@@ -182,14 +255,14 @@ fun ProductCard(
                         enabled = product.isInStock,
                         modifier = Modifier
                             .size(34.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(if (product.isInStock) EmeraldPrimary else BorderLight)
+                            .clip(CircleShape)
+                            .background(if (product.isInStock) EmeraldPrimary else TextMuted.copy(alpha = 0.3f))
                     ) {
                         Icon(
                             Icons.Default.AddShoppingCart,
-                            contentDescription = "Add to cart",
+                            contentDescription = "Add to Cart",
                             tint = Color.White,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(16.dp)
                         )
                     }
                 }
@@ -199,26 +272,25 @@ fun ProductCard(
 }
 
 @Composable
-fun StatusBadge(status: String, modifier: Modifier = Modifier) {
-    val (bgColor, textColor) = when (status.uppercase()) {
-        "DELIVERED", "PAID", "SUCCESS", "COMPLETED", "ACTIVE" -> Pair(EmeraldContainer, EmeraldDark)
-        "PENDING", "BOOKED", "UPCOMING" -> Pair(Color(0xFFFEF3C7), Color(0xFF92400E))
-        "PROCESSING", "ASSIGNED", "IN_TRANSIT", "DISPATCHED" -> Pair(Color(0xFFDBEAFE), Color(0xFF1E40AF))
-        "CANCELLED", "FAILED", "INACTIVE" -> Pair(Color(0xFFFFE4E6), Color(0xFF9F1239))
-        else -> Pair(SurfaceBg, TextSecondary)
+fun StatusBadge(status: String) {
+    val (bg, fg) = when (status.uppercase()) {
+        "ACTIVE", "PAID", "DELIVERED", "VERIFIED", "COMPLETED" -> Pair(Color(0xFFDCFCE7), EmeraldDark)
+        "PENDING", "BOOKED", "NEW" -> Pair(Color(0xFFFEF3C7), Color(0xFF92400E))
+        "PROCESSING", "IN_TRANSIT", "IN_PROGRESS" -> Pair(Color(0xFFDBEAFE), Color(0xFF1E40AF))
+        "CANCELLED", "OUT_OF_STOCK", "INACTIVE", "FAILED" -> Pair(Color(0xFFFFE4E6), StatusError)
+        else -> Pair(EmeraldLight, TextSecondary)
     }
 
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(bgColor)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+    Surface(
+        color = bg,
+        shape = RoundedCornerShape(8.dp)
     ) {
         Text(
             text = status.replace("_", " "),
+            color = fg,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            color = textColor
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
         )
     }
 }
@@ -226,88 +298,85 @@ fun StatusBadge(status: String, modifier: Modifier = Modifier) {
 @Composable
 fun QuantityPicker(
     quantity: Int,
-    onQuantityChange: (Int) -> Unit,
-    maxQuantity: Int = 999,
+    maxQuantity: Int,
+    onQuantityChanged: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(SurfaceBg)
             .border(1.dp, BorderLight, RoundedCornerShape(12.dp))
-            .padding(horizontal = 4.dp, vertical = 2.dp)
+            .background(CardBg, RoundedCornerShape(12.dp))
+            .padding(4.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            onClick = { if (quantity > 1) onQuantityChange(quantity - 1) },
-            modifier = Modifier.size(28.dp)
+            onClick = { if (quantity > 1) onQuantityChanged(quantity - 1) },
+            enabled = quantity > 1,
+            modifier = Modifier.size(32.dp)
         ) {
-            Icon(Icons.Default.Remove, contentDescription = "Decrease", tint = TextPrimary, modifier = Modifier.size(16.dp))
+            Icon(Icons.Default.Remove, contentDescription = "Decrease", modifier = Modifier.size(16.dp))
         }
 
         Text(
-            text = quantity.toString(),
+            text = "$quantity",
             fontWeight = FontWeight.Bold,
-            fontSize = 14.sp,
-            modifier = Modifier.padding(horizontal = 10.dp)
+            fontSize = 15.sp,
+            color = TextPrimary,
+            modifier = Modifier.padding(horizontal = 12.dp)
         )
 
         IconButton(
-            onClick = { if (quantity < maxQuantity) onQuantityChange(quantity + 1) },
-            modifier = Modifier.size(28.dp)
+            onClick = { if (quantity < maxQuantity) onQuantityChanged(quantity + 1) },
+            enabled = quantity < maxQuantity,
+            modifier = Modifier.size(32.dp)
         ) {
-            Icon(Icons.Default.Add, contentDescription = "Increase", tint = TextPrimary, modifier = Modifier.size(16.dp))
+            Icon(Icons.Default.Add, contentDescription = "Increase", modifier = Modifier.size(16.dp))
         }
     }
 }
 
 @Composable
-fun OrderProgressStepper(currentStatus: String, modifier: Modifier = Modifier) {
-    val steps = listOf("PENDING", "PAID", "PROCESSING", "DISPATCHED", "DELIVERED")
+fun OrderProgressStepper(currentStatus: String) {
+    val steps = listOf("PAID", "PROCESSING", "DISPATCHED", "DELIVERED")
     val currentIndex = steps.indexOf(currentStatus.uppercase()).coerceAtLeast(0)
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            steps.forEachIndexed { index, step ->
-                val isCompleted = index <= currentIndex
-                val isCurrent = index == currentIndex
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        steps.forEachIndexed { index, step ->
+            val isCompleted = index <= currentIndex
+            val isCurrent = index == currentIndex
 
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .clip(CircleShape)
-                            .background(
-                                if (isCompleted) EmeraldPrimary else BorderLight
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (isCompleted) {
-                            Icon(Icons.Default.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
-                        } else {
-                            Text(text = (index + 1).toString(), fontSize = 12.sp, color = TextMuted, fontWeight = FontWeight.Bold)
-                        }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(30.dp)
+                        .clip(CircleShape)
+                        .background(if (isCompleted) EmeraldPrimary else BorderLight),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (isCompleted) {
+                        Icon(Icons.Default.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
+                    } else {
+                        Text("${index + 1}", fontSize = 12.sp, color = TextMuted, fontWeight = FontWeight.Bold)
                     }
-                    Text(
-                        text = when (step) {
-                            "PENDING" -> "Placed"
-                            "PAID" -> "Paid"
-                            "PROCESSING" -> "Packing"
-                            "DISPATCHED" -> "Transit"
-                            "DELIVERED" -> "Delivered"
-                            else -> step
-                        },
-                        fontSize = 9.sp,
-                        fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isCompleted) TextPrimary else TextMuted,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
                 }
+
+                Text(
+                    text = step.replace("_", " "),
+                    fontSize = 10.sp,
+                    fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Medium,
+                    color = if (isCurrent) EmeraldPrimary else TextMuted,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
             }
         }
     }

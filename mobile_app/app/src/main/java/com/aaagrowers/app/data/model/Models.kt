@@ -180,49 +180,49 @@ data class UpdateOrderStatusRequest(
 )
 
 data class Order(
-    val id: Int,
-    @SerializedName("order_number") val orderNumber: String,
-    @SerializedName("customer_id") val customerId: Int,
-    @SerializedName("customer_name") val customerName: String,
-    @SerializedName("total_amount") val totalAmount: Double,
-    @SerializedName("discount_amount") val discountAmount: Double,
-    @SerializedName("shipping_fee") val shippingFee: Double,
-    @SerializedName("net_amount") val netAmount: Double,
-    val status: String,
-    @SerializedName("payment_status") val paymentStatus: String,
-    @SerializedName("delivery_address") val deliveryAddress: String,
-    @SerializedName("delivery_city") val deliveryCity: String,
-    @SerializedName("delivery_phone") val deliveryPhone: String,
-    val notes: String?,
-    val items: List<OrderItem>?,
-    val dispatch: DispatchInfo?,
-    @SerializedName("placed_at") val placedAt: String?
+    val id: Int = 0,
+    @SerializedName("order_number") val orderNumber: String = "",
+    @SerializedName("customer_id") val customerId: Int = 0,
+    @SerializedName("customer_name") val customerName: String? = "",
+    @SerializedName("total_amount") val totalAmount: Double = 0.0,
+    @SerializedName("discount_amount") val discountAmount: Double = 0.0,
+    @SerializedName("shipping_fee") val shippingFee: Double = 0.0,
+    @SerializedName("net_amount") val netAmount: Double = 0.0,
+    val status: String = "PENDING",
+    @SerializedName("payment_status") val paymentStatus: String = "PENDING",
+    @SerializedName("delivery_address") val deliveryAddress: String? = "",
+    @SerializedName("delivery_city") val deliveryCity: String? = "",
+    @SerializedName("delivery_phone") val deliveryPhone: String? = "",
+    val notes: String? = null,
+    val items: List<OrderItem>? = null,
+    val dispatch: DispatchInfo? = null,
+    @SerializedName("placed_at") val placedAt: String? = null
 )
 
 data class OrderItem(
-    val id: Int,
-    @SerializedName("product_id") val productId: Int,
-    @SerializedName("product_name") val productName: String,
-    @SerializedName("product_image") val productImage: String?,
-    @SerializedName("product_sku") val productSku: String?,
-    @SerializedName("product_unit") val productUnit: String?,
-    @SerializedName("unit_price") val unitPrice: Double,
-    val quantity: Int,
-    val subtotal: Double
+    val id: Int = 0,
+    @SerializedName("product_id") val productId: Int = 0,
+    @SerializedName("product_name") val productName: String = "",
+    @SerializedName("product_image") val productImage: String? = null,
+    @SerializedName("product_sku") val productSku: String? = null,
+    @SerializedName("product_unit") val productUnit: String? = null,
+    @SerializedName("unit_price") val unitPrice: Double = 0.0,
+    val quantity: Int = 1,
+    val subtotal: Double = 0.0
 )
 
 // Dispatch & Fleet
 data class DispatchInfo(
-    val id: Int,
-    @SerializedName("dispatch_number") val dispatchNumber: String,
+    val id: Int = 0,
+    @SerializedName("dispatch_number") val dispatchNumber: String = "",
     @SerializedName("order_id") val orderId: Int = 0,
     @SerializedName("order_number") val orderNumber: String? = null,
     @SerializedName("driver_id") val driverId: Int? = null,
-    @SerializedName("driver_name") val driverName: String?,
-    @SerializedName("vehicle_reg") val vehicleReg: String?,
+    @SerializedName("driver_name") val driverName: String? = null,
+    @SerializedName("vehicle_reg") val vehicleReg: String? = null,
     @SerializedName("delivery_address") val deliveryAddress: String? = null,
-    val status: String,
-    @SerializedName("tracking_notes") val trackingNotes: String?
+    val status: String = "PENDING",
+    @SerializedName("tracking_notes") val trackingNotes: String? = null
 )
 
 data class UpdateDispatchStatusRequest(

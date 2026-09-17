@@ -9,6 +9,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.ReceiptLong
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aaagrowers.app.ui.components.AAAButton
 import com.aaagrowers.app.ui.components.StatusBadge
 import com.aaagrowers.app.ui.theme.*
 import com.aaagrowers.app.ui.viewmodel.OrderViewModel
@@ -23,10 +26,12 @@ import com.aaagrowers.app.ui.viewmodel.OrderViewModel
 @Composable
 fun OrderHistoryScreen(
     orderViewModel: OrderViewModel,
-    onNavigateToOrderTracking: (Int) -> Unit
+    onNavigateToOrderTracking: (Int) -> Unit,
+    onNavigateToCatalog: (() -> Unit)? = null
 ) {
     val orders by orderViewModel.orders.collectAsState()
     val isLoading by orderViewModel.isLoading.collectAsState()
+    val errorMessage by orderViewModel.errorMessage.collectAsState()
 
     LaunchedEffect(Unit) {
         orderViewModel.loadOrderHistory()
@@ -38,18 +43,62 @@ fun OrderHistoryScreen(
             .background(SurfaceBg)
             .padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
-        Text(
-            text = "My Order History",
-            fontWeight = FontWeight.Black,
-            fontSize = 22.sp,
-            color = TextPrimary
-        )
-        Text(
-            text = "Track status and view details of your previous fresh produce orders.",
-            fontSize = 13.sp,
-            color = TextSecondary,
-            modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "My Order History",
+                    fontWeight = FontWeight.Black,
+                    fontSize = 22.sp,
+                    color = TextPrimary
+                )
+                Text(
+                    text = "Track status and view details of your previous orders.",
+                    fontSize = 12.sp,
+                    color = TextSecondary,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
+            }
+
+            IconButton(
+                onClick = { orderViewModel.loadOrderHistory() },
+                modifier = Modifier.padding(start = 8.dp)
+            ) {
+                Icon(Icons.Default.Refresh, contentDescription = "Refresh", tint = EmeraldPrimary)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        if (errorMessage != null) {
+            Surface(
+                color = androidx.compose.ui.graphics.Color(0xFFFFE4E6),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = errorMessage!!,
+                        color = StatusError,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.weight(1f)
+                    )
+                    TextButton(onClick = { orderViewModel.loadOrderHistory() }) {
+                        Text("Retry", color = StatusError, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                    }
+                }
+            }
+        }
 
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -57,9 +106,38 @@ fun OrderHistoryScreen(
             }
         } else if (orders.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(Icons.Default.ReceiptLong, contentDescription = null, tint = TextMuted, modifier = Modifier.size(56.dp))
-                    Text("No past orders found.", color = TextSecondary, fontSize = 14.sp, modifier = Modifier.padding(top = 12.dp))
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                ) {
+                    Icon(
+                        Icons.Default.ReceiptLong,
+                        contentDescription = null,
+                        tint = TextMuted,
+                        modifier = Modifier.size(64.dp)
+                    )
+                    Text(
+                        text = "No past orders found.",
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                    Text(
+                        text = "When you place produce orders, you can track their packing and cold-chain transit progress right here.",
+                        color = TextSecondary,
+                        fontSize = 13.sp,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        modifier = Modifier.padding(top = 6.dp, bottom = 20.dp)
+                    )
+
+                    if (onNavigateToCatalog != null) {
+                        AAAButton(
+                            text = "Browse Fresh Produce",
+                            icon = Icons.Default.ShoppingBag,
+                            onClick = onNavigateToCatalog
+                        )
+                    }
                 }
             }
         } else {

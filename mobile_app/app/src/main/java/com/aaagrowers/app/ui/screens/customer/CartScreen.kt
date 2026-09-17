@@ -21,7 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import com.aaagrowers.app.ui.components.AAAAsyncImage
 import com.aaagrowers.app.ui.components.AAAButton
 import com.aaagrowers.app.ui.components.QuantityPicker
 import com.aaagrowers.app.ui.theme.*
@@ -191,9 +191,10 @@ fun CartScreen(
                                 .padding(12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            AsyncImage(
-                                model = item.product.imageUrl ?: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300",
+                            AAAAsyncImage(
+                                imageUrl = item.product.imageUrl,
                                 contentDescription = item.product.name,
+                                fallbackTitle = item.product.name,
                                 modifier = Modifier
                                     .size(70.dp)
                                     .clip(RoundedCornerShape(12.dp)),

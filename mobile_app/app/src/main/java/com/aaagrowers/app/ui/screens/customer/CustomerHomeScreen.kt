@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import com.aaagrowers.app.ui.components.AAAAsyncImage
 import com.aaagrowers.app.ui.components.ProductCard
 import com.aaagrowers.app.ui.theme.*
 import com.aaagrowers.app.ui.viewmodel.CartViewModel
@@ -193,9 +193,10 @@ fun CustomerHomeScreen(
                             .background(EmeraldContainer),
                         contentAlignment = Alignment.Center
                     ) {
-                        AsyncImage(
-                            model = cat.imageUrl ?: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200",
+                        AAAAsyncImage(
+                            imageUrl = cat.imageUrl,
                             contentDescription = cat.name,
+                            fallbackTitle = cat.name,
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )

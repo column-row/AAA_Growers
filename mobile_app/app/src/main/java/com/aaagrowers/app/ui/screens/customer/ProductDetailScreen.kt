@@ -18,7 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import com.aaagrowers.app.ui.components.AAAAsyncImage
 import com.aaagrowers.app.ui.components.AAAButton
 import com.aaagrowers.app.ui.components.QuantityPicker
 import com.aaagrowers.app.ui.theme.*
@@ -115,9 +115,10 @@ fun ProductDetailScreen(
                     .height(280.dp)
                     .background(BorderLight)
             ) {
-                AsyncImage(
-                    model = prod.imageUrl ?: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800",
+                AAAAsyncImage(
+                    imageUrl = prod.imageUrl,
                     contentDescription = prod.name,
+                    fallbackTitle = prod.name,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
