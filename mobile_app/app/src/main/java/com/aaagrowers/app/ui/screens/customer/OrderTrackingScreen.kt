@@ -212,8 +212,8 @@ fun OrderTrackingScreen(
                         color = TextPrimary,
                         modifier = Modifier.padding(bottom = 6.dp)
                     )
-                    Text(ord.deliveryAddress, fontSize = 13.sp, color = TextSecondary)
-                    Text("${ord.deliveryCity} • ${ord.deliveryPhone}", fontSize = 12.sp, color = TextMuted, modifier = Modifier.padding(top = 2.dp))
+                    Text(ord.deliveryAddress ?: "N/A", fontSize = 13.sp, color = TextSecondary)
+                    Text("${ord.deliveryCity ?: ""} • ${ord.deliveryPhone ?: ""}", fontSize = 12.sp, color = TextMuted, modifier = Modifier.padding(top = 2.dp))
                 }
             }
         }
