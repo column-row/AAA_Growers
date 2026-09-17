@@ -17,9 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.aaagrowers.app.ui.components.ProductCard
-import com.aaagrowers.app.ui.theme.*
+import com.aaagrowers.app.ui.theme.EmeraldPrimary
+import com.aaagrowers.app.ui.theme.SurfaceBg
+import com.aaagrowers.app.ui.theme.TextPrimary
+import com.aaagrowers.app.ui.theme.TextSecondary
 import com.aaagrowers.app.ui.viewmodel.CartViewModel
 import com.aaagrowers.app.ui.viewmodel.CustomerViewModel
 
