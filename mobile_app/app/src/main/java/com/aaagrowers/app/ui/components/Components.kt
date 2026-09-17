@@ -299,7 +299,7 @@ fun StatusBadge(status: String) {
 fun QuantityPicker(
     quantity: Int,
     maxQuantity: Int,
-    onQuantityChanged: (Int) -> Unit,
+    onQuantityChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -310,7 +310,7 @@ fun QuantityPicker(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            onClick = { if (quantity > 1) onQuantityChanged(quantity - 1) },
+            onClick = { if (quantity > 1) onQuantityChange(quantity - 1) },
             enabled = quantity > 1,
             modifier = Modifier.size(32.dp)
         ) {
@@ -326,7 +326,7 @@ fun QuantityPicker(
         )
 
         IconButton(
-            onClick = { if (quantity < maxQuantity) onQuantityChanged(quantity + 1) },
+            onClick = { if (quantity < maxQuantity) onQuantityChange(quantity + 1) },
             enabled = quantity < maxQuantity,
             modifier = Modifier.size(32.dp)
         ) {
