@@ -1,3 +1,4 @@
+@file:JvmName("ThemeColors")
 package com.aaagrowers.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
