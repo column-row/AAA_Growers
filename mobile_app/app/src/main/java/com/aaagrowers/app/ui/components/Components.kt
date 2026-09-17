@@ -25,7 +25,22 @@ import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.aaagrowers.app.data.model.Product
-import com.aaagrowers.app.ui.theme.*
+import com.aaagrowers.app.ui.theme.EmeraldPrimary
+import com.aaagrowers.app.ui.theme.EmeraldDark
+import com.aaagrowers.app.ui.theme.EmeraldLight
+import com.aaagrowers.app.ui.theme.EmeraldContainer
+import com.aaagrowers.app.ui.theme.EarthGold
+import com.aaagrowers.app.ui.theme.EarthDark
+import com.aaagrowers.app.ui.theme.SurfaceBg
+import com.aaagrowers.app.ui.theme.CardBg
+import com.aaagrowers.app.ui.theme.TextPrimary
+import com.aaagrowers.app.ui.theme.TextSecondary
+import com.aaagrowers.app.ui.theme.TextMuted
+import com.aaagrowers.app.ui.theme.BorderLight
+import com.aaagrowers.app.ui.theme.StatusSuccess
+import com.aaagrowers.app.ui.theme.StatusWarning
+import com.aaagrowers.app.ui.theme.StatusError
+import com.aaagrowers.app.ui.theme.StatusInfo
 
 @Composable
 fun AAAButton(
